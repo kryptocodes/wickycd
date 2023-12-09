@@ -110,7 +110,7 @@ const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username, 
               width={50}
               height={50}
             />
-            {!payment ? 
+            {!payment && !type ? 
             <button className="text-white w-full black-btn mb-4 mt-2"
               onClick={() => sendTransaction?.() }
             >
@@ -118,7 +118,7 @@ const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username, 
             </button>
             :
             <button 
-            onClick={() => type ? "" : window.open('/chat', '_blank') }
+            onClick={() => type ? window.open("/video", "_blank") : window.open('/chat', '_blank') }
             className="text-white w-full black-btn">
              { type ? "call" : "Chat" }
             </button> }
