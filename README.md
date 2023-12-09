@@ -11,4 +11,5 @@ Scroll - https://sepolia.scrollscan.dev/address/0xba0a1973136d73409abe21171fdf99
 Celo - https://alfajores.celoscan.io/address/0x6bc38a697fb08472150cfba6e94119d46ae4c568#code
 Mantle - 0x6Bc38A697Fb08472150CfBA6E94119d46ae4c568
 Linea - https://explorer.goerli.linea.build/address/0x6Bc38A697Fb08472150CfBA6E94119d46ae4c568/contracts#address-tabs
+Base - https://goerli.basescan.org/address/0x6bc38a697fb08472150cfba6e94119d46ae4c568#code
 ```
