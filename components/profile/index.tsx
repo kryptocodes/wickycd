@@ -21,6 +21,7 @@ interface profileType {
   edit: boolean;
   lens: string;
   wallet: string;
+  userPaid?: string[];
 }
 
 function Profile({
@@ -33,6 +34,7 @@ function Profile({
   edit = false,
   lens,
   wallet,
+  userPaid,
 }: profileType) {
   const router = useRouter();
   const [modal, setModal] = React.useState(false);
@@ -60,9 +62,25 @@ function Profile({
 
   const [isClient, setIsClient] = React.useState(false);
 
+  console.log(userPaid);
   useEffect(() => {
     setIsClient(true);
+    updateUserPaidStatus()
   }, []);
+
+  const updateUserPaidStatus = async() => {
+    if(userPaid && userPaid?.length > 0){
+       // find the address in the array
+        const index = userPaid.indexOf(address as string);
+        if(index > -1){
+          setPaymentModal({
+            state: paymentModal.state,
+            type: paymentModal.type,
+            payment: true,
+          })
+        }
+  }
+}
   
   return (
     <>

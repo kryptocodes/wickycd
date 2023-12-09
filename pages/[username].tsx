@@ -41,6 +41,7 @@ export default function Home() {
     username: false,
     bio: false,
     wallet: false,
+    usersPaid: [],
   },
   proofs: {
     email: false,
@@ -59,6 +60,19 @@ export default function Home() {
         }
     }
     , [router.isReady, router.query.username])
+
+
+    useEffect(() => {
+    if(router.isReady){
+      const interval = setInterval(() => {
+        fetchUserInfo({username: router.query.username as string})
+      }, 5000)
+      
+      return () => clearInterval(interval);
+    }
+  
+    },  [router.isReady, router.query.username]);
+
 
 
 
@@ -289,6 +303,7 @@ export default function Home() {
                   edit={false}
                   lens={lensHandle?.length > 0 ? lensHandle[0] : ""}
                   wallet={userInfo?.userData?.wallet || ""}
+                  userPaid={userInfo?.userData?.usersPaid || []}
                 />
                   
                 {/* <Requests /> */}

@@ -309,6 +309,7 @@ export default function Main() {
               edit={true}
               lens={lensHandle?.length > 0 ? lensHandle[0] : ""}
               wallet={userInfo?.userData?.wallet || false}
+              userPaid={[]}
             />
             <span className="flex left-0 right-0 fixed w-[1048px]  max-[512px]:px-2 max-[1070px]:w-full max-[1070px]:max-w-[500px] mx-auto bottom-0 ">
               {/* {userInfo?.proofs?.length > 0 &&

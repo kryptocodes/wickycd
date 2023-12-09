@@ -3,9 +3,11 @@
 import Close from "@/assets/close";
 import Image from "next/image";
 import React from "react";
-import { useAccount, usePrepareSendTransaction, useSendTransaction } from 'wagmi'
+import { useAccount, usePrepareSendTransaction, useSendTransaction, useWaitForTransaction } from 'wagmi'
 import { parseEther } from 'viem'
-
+import { BE_URL } from "@/pages/_app";
+import { useUserStore } from "@/store/user";
+import useStore from "@/store/useStore";
 
 
 
@@ -30,19 +32,50 @@ interface paymentModalProps {
 const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username, type, payment, address }) => {
   if (!state?.state) return null;
   console.log(state)
+  const token = useStore(useUserStore, (state) => state.token) as string;
+  const { isConnected } = useAccount()
 
-  const { isConnected, address:userAddress } = useAccount()
+  console.log(isConnected)
 
-  console.log(isConnected, userAddress)
-
-  const { config, error:errorState } = usePrepareSendTransaction({
+  const { config, error:errorState, } = usePrepareSendTransaction({
     to: address,
     value: parseEther('0.01')
   })
 
-  const { sendTransaction,error } = useSendTransaction(config)
+  const { sendTransaction,error,status,data } = useSendTransaction(config)
 
-  console.log(error,errorState)
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash
+  })
+
+  
+
+
+  const updateStatus = async() => {
+    try{
+      const res = await fetch(`${BE_URL}user/user/paid`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userAddress: address,
+        }),
+      });
+      const data = await res.json();
+      console.log(data);
+    }
+    catch(error){
+      console.error(error)
+    }
+  }
+  
+  console.log(isSuccess,data)
+
+  if(isSuccess && data?.hash){
+    updateStatus()
+  }
 
   return (
     <>
@@ -84,7 +117,9 @@ const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username, 
               Pay 0.01 ETH
             </button>
             :
-            <button className="text-white w-full black-btn">
+            <button 
+            onClick={() => type ? "" : window.open('/chat', '_blank') }
+            className="text-white w-full black-btn">
              { type ? "call" : "Chat" }
             </button> }
           </div>
