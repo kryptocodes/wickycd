@@ -1,99 +1,141 @@
-import React from 'react'
-import { useState, useEffect } from 'react';
-import { useWaku, useLightPush, useFilterMessages, useStoreMessages } from "@waku/react";
-import { createEncoder, createDecoder } from "@waku/sdk";
-import protobuf from 'protobufjs';
-interface chatProps {
+import * as React from "react";
+import protobuf from "protobufjs";
+import {
+  createLightNode,
+  waitForRemotePeer,
+  createDecoder,
+  bytesToUtf8,
+} from "@waku/sdk";
 
-}
+const ContentTopic = "/toy-chat/2/huilong/proto";
+const decoder = createDecoder(ContentTopic);
 
-const Chat: React.FC<chatProps> = ({}) => {
-        const [inputMessage, setInputMessage] = useState("");
-    const [messages, setMessages] = useState<any>([]);
-    
-        //@ts-ignore
-    const { push } = useLightPush({ node, encoder });
-    //@ts-ignore
-    const { messages: filterMessages } = useFilterMessages({ node, decoder });
+const ProtoChatMessage = new protobuf.Type("ChatMessage")
+  .add(new protobuf.Field("timestamp", 1, "uint64"))
+  .add(new protobuf.Field("hello", 2, "string"))
+  .add(new protobuf.Field("text", 3, "bytes"));
 
+function App() {
+  const [waku, setWaku] = React.useState(undefined);
+  const [wakuStatus, setWakuStatus] = React.useState("None");
+  const [messages, setMessages] = React.useState([]);
 
-    useEffect(() => {
-        setMessages(filterMessages.map((wakuMessage) => {
-            if (!wakuMessage.payload) return;
-            return ChatMessage.decode(wakuMessage.payload);
-        }));
-    }, [filterMessages]);
+  React.useEffect(() => {
+    if (wakuStatus !== "None") return;
 
-    
-    // Update the inputMessage state as the user input changes
-    const handleInputChange = (e:any) => {
-        setInputMessage(e.target.value);
-    };
+    setWakuStatus("Starting");
 
-    // Create and start a Light Node
-    const { node, error, isLoading } = useWaku();
+    createLightNode({ defaultBootstrap: true }).then((waku) => {
+      waku.start().then(() => {
+        setWaku(waku);
+        setWakuStatus("Connecting");
+      });
+    });
+  }, [waku, wakuStatus]);
 
-    // Create a message encoder and decoder
-    const contentTopic = "/waku-react-guide/1/chat/proto";
-    const encoder = createEncoder({ contentTopic });
-    const decoder = createDecoder(contentTopic);
+  React.useEffect(() => {
+    if (!waku) return;
 
-    // Create a message structure using Protobuf
-    const ChatMessage = new protobuf.Type("ChatMessage")
-        .add(new protobuf.Field("timestamp", 1, "uint64"))
-        .add(new protobuf.Field("message", 2, "string"));
+    // We do not handle disconnection/re-connection in this example
+    if (wakuStatus === "Connected") return;
 
-    // Send the message using Light Push
-    const sendMessage = async () => {
-        if (!push || inputMessage.length === 0) return;
+    waitForRemotePeer(waku, ["store"]).then(() => {
+      // We are now connected to a store node
+      setWakuStatus("Connected");
+    });
+  }, [waku, wakuStatus]);
 
-        // Create a new message object
-        const timestamp = Date.now();
-        const protoMessage = ChatMessage.create({
-            timestamp: timestamp,
-            message: inputMessage
-        });
+  React.useEffect(() => {
+    if (wakuStatus !== "Connected") return;
 
-        // Serialise the message and push to the network
-        const payload = ChatMessage.encode(protoMessage).finish();
-        //@ts-ignore
-        const { recipients, errors } = await push({ payload, timestamp });
+    (async () => {
+      const startTime = new Date();
+      // 7 days/week, 24 hours/day, 60min/hour, 60secs/min, 100ms/sec
+      startTime.setTime(startTime.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-        // Check for errors
-        //@ts-ignore
-        if (errors.length === 0) {
-            setInputMessage("");
-            console.log("MESSAGE PUSHED");
-        } else {
-            console.log(errors);
+      // TODO: Remove this timeout once https://github.com/status-im/js-waku/issues/913 is done
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      try {
+        for await (const messagesPromises of waku.store.queryGenerator(
+          [decoder],
+          {
+            timeFilter: { startTime, endTime: new Date() },
+            pageDirection: "forward",
+          }
+        )) {
+          const messages = await Promise.all(
+            messagesPromises.map(async (p) => {
+              const msg = await p;
+              return decodeMessage(msg);
+            })
+          );
+
+          setMessages((currentMessages) => {
+            return currentMessages.concat(messages.filter(Boolean).reverse());
+          });
         }
-    };
+      } catch (e) {
+        console.log("Failed to retrieve messages", e);
+        setWakuStatus("Error Encountered");
+      }
+    })();
+  }, [waku, wakuStatus]);
 
-        return (
-                <>
-                 <div className="chat-interface">
-                <h1>Waku React Demo</h1>
-                <div className="chat-body">
-                    {messages.map((message: any, index: number) => (
-                        <div key={index} className="chat-message">
-                            <span>{new Date(message.timestamp).toUTCString()}</span>
-                            <div className="message-text">{message.message}</div>
-                        </div>
-                    ))}
-                </div>
-                <div className="chat-footer">
-                    <input
-                        type="text"
-                        id="message-input"
-                        value={inputMessage}
-                        onChange={handleInputChange}
-                        placeholder="Type your message..."
-                    />
-                    <button className="send-button" onClick={sendMessage}>Send</button>
-                </div>
-            </div>
-                </>
-        );
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h2>{wakuStatus}</h2>
+        <h3>Messages</h3>
+        <ul>
+          <Messages messages={messages} />
+        </ul>
+      </header>
+    </div>
+  );
 }
 
-export default Chat
+export default App;
+
+function decodeMessage(wakuMessage) {
+  if (!wakuMessage.payload) return;
+
+  const { timestamp, nick, text } = ProtoChatMessage.decode(
+    wakuMessage.payload
+  );
+
+  if (!timestamp || !text || !nick) return;
+
+  const time = new Date();
+  time.setTime(Number(timestamp));
+
+  const utf8Text = bytesToUtf8(text);
+
+  return {
+    text: utf8Text,
+    timestamp: time,
+    nick,
+    timestampInt: wakuMessage.timestamp,
+  };
+}
+
+function Messages(props) {
+  return props.messages.map(({ text, timestamp, nick, timestampInt }) => {
+    return (
+      <li key={timestampInt}>
+        ({formatDate(timestamp)}) {nick}: {text}
+      </li>
+    );
+  });
+}
+
+function formatDate(timestamp) {
+  return timestamp.toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+}
