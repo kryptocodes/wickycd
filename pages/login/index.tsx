@@ -135,7 +135,11 @@ const Login: React.FC<indexProps> = ({}) => {
 
         <span className="flex flex-col gap-y-4 text-[18px] font-semibold mt-[48px] max-[512px]:mt-auto mb-6">
           
-
+        <button
+              className="cursor-pointer border-btn py-[22px]  max-w-[340px] w-[95vw] flex items-center justify-center gap-x-2"
+            >
+                <LogInWithAnonAadhaar  />
+            </button>
           
         
           {!address ? (
@@ -151,11 +155,7 @@ const Login: React.FC<indexProps> = ({}) => {
               </picture>
                Login
             </button>
-            <button
-              className="cursor-pointer border-btn py-[22px]  max-w-[340px] w-[95vw] flex items-center justify-center gap-x-2"
-            >
-                <LogInWithAnonAadhaar  />
-            </button>
+           
               
             </>
           ) : (

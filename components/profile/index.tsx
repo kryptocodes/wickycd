@@ -11,6 +11,11 @@ import ChatIcon from "@/assets/svg/chatIcon";
 import PaymentModal from "../modal/payment";
 import { ConnectButton, useConnectModal, Wallet } from "@rainbow-me/rainbowkit";
 
+
+import { useGetWalletENS, useGetWalletENSAndSocial } from "@airstack/airstack-react";
+
+
+
 interface profileType {
   name: string;
   username: string;
@@ -46,11 +51,22 @@ function Profile({
     payment: false,
   });
   const { isConnected, address } = useAccount();
+  const {data} = useGetWalletENS({
+    identity: wallet,
+    blockchain: "ethereum"
+  });
+
+  console.log("ens", data)
+
+  
   const ens = async () => {
     const provider = new providers.JsonRpcProvider("https://eth.llamarpc.com");
     const ens = await provider.lookupAddress(wallet);
-    setEns(ens || "");
+    // setEns(ens || "");
+    setEns(data?.primaryDomain?.name || ens || "")
+    // return ens;
     return ens;
+    
   };
   useEffect(() => {
     if (wallet) {
