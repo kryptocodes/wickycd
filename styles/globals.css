@@ -27,6 +27,13 @@
   box-shadow: 0px 4px 0px 0px #000;
 }
 
+.blue-btn {
+  border-radius: 60px;
+  border: 2px solid var(--White, #fff);
+  background: var(--greygrey, #006CFF);
+  box-shadow: 0px 4px 0px 0px #006CFF;
+}
+
 .border-btn {
   border-radius: 60px;
   border: 2px solid #181818;

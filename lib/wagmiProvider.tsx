@@ -1,6 +1,5 @@
 import {
     connectorsForWallets,
-    DisclaimerComponent,
     RainbowKitProvider,
   } from "@rainbow-me/rainbowkit";
   
@@ -51,7 +50,7 @@ import {
     uiConfig: {
       loginMethodsOrder: ["google", "twitter"],
       mode: "light",
-      appName: "Webtree",
+      appName: "Wickcyd",
       primaryButton: "socialLogin",
       modalZIndex: "21474836460",
     },
@@ -117,7 +116,7 @@ import {
           <WagmiConfig config={config}>
             <RainbowKitProvider
               appInfo={{
-                appName: "Webtree",
+                appName: "Wickycd",
               }}
               modalSize="compact"
               chains={chains}

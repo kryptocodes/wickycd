@@ -124,7 +124,7 @@ const Login: React.FC<indexProps> = ({}) => {
         </h1>
         <p className="text-center text-[#575A5C] mt-3">
           Use either your Google account or your preferred Wallet to Sign into
-          Webtree
+          Wickycd
         </p>
 
 

@@ -6,6 +6,9 @@ import useStore from "@/store/useStore";
 import { useUserStore } from "@/store/user";
 import { useAccount } from "wagmi";
 import { providers } from "ethers"
+import VideoIcon from "@/assets/svg/videoIcon";
+import ChatIcon from "@/assets/svg/chatIcon";
+import PaymentModal from "../modal/payment";
 interface profileType {
   name: string;
   username: string;
@@ -33,6 +36,7 @@ function Profile({
   const [modal, setModal] = React.useState(false);
   const token = useStore(useUserStore, (state) => state.token);
   const [Ens, setEns] = React.useState("");
+  const [paymentModal, setPaymentModal] = React.useState(false);
   const ens = async() => {
     const provider = new providers.JsonRpcProvider("https://eth.llamarpc.com");
     const ens = await provider.lookupAddress(wallet);
@@ -48,6 +52,7 @@ function Profile({
   }, [wallet])
   
   return (
+    <>
     <div className="flex w-full h-max">
       <div className="relative flex flex-col rounded-[23.5px] p-[14.7px] w-[500px]  max-[512px]:w-[95vw] bg-[#D6E0EA]">
         {/* Profile Img */}
@@ -147,9 +152,28 @@ function Profile({
         ) : (
           ""
         )}
+
+        <div className="flex flex-row">
+              <button
+          className="blue-btn text-white h-12  px-4 flex flex-row gap-4 p-2"
+          onClick={() => setPaymentModal(!paymentModal)}
+        >
+          <VideoIcon className="w-5 h-5" />
+          Huddle
+        </button>
+        <button
+          className="black-btn text-white h-12 px-4 flex flex-row gap-4 p-2"
+        >
+          <ChatIcon className="w-5 h-5" />
+          Chat
+        </button>
+      </div>
       </div>
       <PFPModal state={modal} setState={setModal} />
+      <PaymentModal state={paymentModal} setState={setPaymentModal} username={username}/>
     </div>
+       
+    </>
   );
 }
 
