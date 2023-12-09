@@ -1,17 +1,49 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @next/next/no-img-element */
 import Close from "@/assets/close";
 import Image from "next/image";
 import React from "react";
+import { useAccount, usePrepareSendTransaction, useSendTransaction } from 'wagmi'
+import { parseEther } from 'viem'
+
+
+
 
 interface paymentModalProps {
-    state: boolean;
-    setState: (state: boolean) => void;
+    state: {
+        state: boolean;
+        type: boolean;
+        payment: boolean;
+    }
+    setState: React.Dispatch<React.SetStateAction<{
+        state: boolean;
+        type: boolean;
+        payment: boolean;
+    }>>;
     username?: string;
+    type?: boolean
+    payment?: boolean
+    address: string
 }
 
 
-const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username }) => {
-  if (!state) return null;
+const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username, type, payment, address }) => {
+  if (!state?.state) return null;
+  console.log(state)
+
+  const { isConnected, address:userAddress } = useAccount()
+
+  console.log(isConnected, userAddress)
+
+  const { config, error:errorState } = usePrepareSendTransaction({
+    to: address,
+    value: parseEther('0.01')
+  })
+
+  const { sendTransaction,error } = useSendTransaction(config)
+
+  console.log(error,errorState)
+
   return (
     <>
       <div
@@ -28,23 +60,33 @@ const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username }
           
           bg-[#FFFFFF] w-3/2 mx-auto p-4">
             <div className="flex flex-row justify-between w-full">
-            <h1 className="text-black text-2xl font-bold">
-              Huddle with {username}
+            <h1 className="text-black text-xl font-bold mb-4 mt-2">
+              {
+                type ? `Huddle with ${username}` : `Chat as ${username} with waku`
+              }
             </h1>
             <span 
-        onClick={() => setState(false)}
-        className="flex mr-4">
+        onClick={() => setState({ state: false, type: state?.type, payment: state?.payment })}
+        className="flex mr-auto">
           <Close />
           </span>
           </div>
-            <Image src={"/huddle.png"}
+            <Image src={
+              type ? "/huddle.png" : "/waku.png" }
               alt="huddle"
-              width={150}
-              height={150}
+              width={50}
+              height={50}
             />
-            <button className="text-white w-full black-btn">
-             Call Now
+            {!payment ? 
+            <button className="text-white w-full black-btn mb-4 mt-2"
+              onClick={() => sendTransaction?.() }
+            >
+              Pay 0.01 ETH
             </button>
+            :
+            <button className="text-white w-full black-btn">
+             { type ? "call" : "Chat" }
+            </button> }
           </div>
           </div>
         </div>
