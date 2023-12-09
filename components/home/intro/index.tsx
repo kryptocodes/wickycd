@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 
 import logobg from "../../../assets/svg/logobg.svg";
-import WebtreeLogo from "../../../assets/logo/webtree";
+import WickycdLogo from "../../../assets/logo/wickycd";
 
 import { Inter, Familjen_Grotesk } from "next/font/google";
 
@@ -30,12 +30,12 @@ const Intro = ({}) => {
           <h1
             className={`text-[64px] max-[512px]:text-[48px] font-bold mt-[8vh] leading-[64px]`}
           >
-            Welcome to Webtree
+            Welcome to Wickycd
           </h1>
           <p className="text-[24px] mt-3 max-[512px]:text-[18px]">
             Your Verified Linktree
           </p>
-          <WebtreeLogo className="w-[200px]" />
+          <WickycdLogo className="w-[200px]" />
           <button
             onClick={() => {
               window.location.href = "/login";
@@ -45,7 +45,7 @@ const Intro = ({}) => {
             Get Started
           </button>
           <p className="text-[#A5BCB0] py-4">
-            Built by OWNOS. Remember the Name.
+            Built by Bob the Builder.
           </p>
         </div>
       </span>

@@ -1,6 +1,6 @@
 import React from "react";
 
-function WebtreeLogo({ className = "" }: { className?: string }) {
+function WickycdLogo({ className = "" }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -22,4 +22,4 @@ function WebtreeLogo({ className = "" }: { className?: string }) {
   );
 }
 
-export default WebtreeLogo;
+export default WickycdLogo;
