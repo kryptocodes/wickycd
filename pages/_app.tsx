@@ -1,8 +1,9 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import WagmiProvider from "@/lib/wagmiProvider";
+import { AnonAadhaarProvider } from 'anon-aadhaar-react'
 
-
+const app_id = process.env.NEXT_PUBLIC_APP_ID || "";
 import { HuddleClient, HuddleProvider } from "@huddle01/react";
 
 const huddleClient = new HuddleClient({
@@ -21,7 +22,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider>
        <HuddleProvider client={huddleClient}>
+       <AnonAadhaarProvider _appId={app_id}>
       <Component {...pageProps} />
+      </AnonAadhaarProvider>
       </HuddleProvider>
     </WagmiProvider>
   );

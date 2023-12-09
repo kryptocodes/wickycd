@@ -21,6 +21,11 @@ import useStore from "@/store/useStore";
 import Loader from "@/components/modal/loader";
 import { Connector  } from 'wagmi/connectors'
 import { disconnect } from "process";
+import {
+  LogInWithAnonAadhaar,
+  useAnonAadhaar,
+  AnonAadhaarProof,
+} from "anon-aadhaar-react";
 
 
 interface indexProps {}
@@ -123,7 +128,7 @@ const Login: React.FC<indexProps> = ({}) => {
           Login your way
         </h1>
         <p className="text-center text-[#575A5C] mt-3">
-          Use either your Google account or your preferred Wallet to Sign into
+          Use either your Aadhaar or your preferred Wallet to Sign into
           Wickycd
         </p>
 
@@ -146,6 +151,12 @@ const Login: React.FC<indexProps> = ({}) => {
               </picture>
                Login
             </button>
+            <button
+              className="cursor-pointer border-btn py-[22px]  max-w-[340px] w-[95vw] flex items-center justify-center gap-x-2"
+            >
+                <LogInWithAnonAadhaar  />
+            </button>
+              
             </>
           ) : (
             <button
