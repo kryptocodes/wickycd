@@ -2,26 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.db-border {
+  border-radius: 60px;
+  border: 2px solid var(--greygrey, #181818);
+  background: var(--Steel-grey, #d6e0ea);
+  box-shadow:
+    0px 0px 0px 4px #fff inset,
+    0px 4px 0px 0px #000;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.add-more {
+  border-radius: 60px;
+  border: 2px solid var(--greygrey, #181818);
+  background: #e4ead6;
+  box-shadow:
+    0px 0px 0px 4px #fff inset,
+    0px 4px 0px 0px #000;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.black-btn {
+  border-radius: 60px;
+  border: 2px solid var(--White, #fff);
+  background: var(--greygrey, #181818);
+  box-shadow: 0px 4px 0px 0px #000;
+}
+
+.border-btn {
+  border-radius: 60px;
+  border: 2px solid #181818;
+  box-shadow:
+    0px 0px 0px 4px #fff inset,
+    0px 4px 0px 0px #000;
+  cursor: pointer;
 }
