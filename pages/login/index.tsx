@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 
 //assets
 import Wickycd from "@/assets/logo/wickycd";
@@ -42,6 +42,11 @@ const Login: React.FC<indexProps> = ({}) => {
   const [loader, setLoader] = useState<boolean>(false);
   const { address } = useAccount();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   
   
 
@@ -135,11 +140,14 @@ const Login: React.FC<indexProps> = ({}) => {
 
         <span className="flex flex-col gap-y-4 text-[18px] font-semibold mt-[48px] max-[512px]:mt-auto mb-6">
           
+          {
+            isClient &&
         <button
               className="cursor-pointer border-btn py-[22px]  max-w-[340px] w-[95vw] flex items-center justify-center gap-x-2"
             >
                 <LogInWithAnonAadhaar  />
             </button>
+          }
           
         
           {!address ? (

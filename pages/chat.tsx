@@ -7,6 +7,8 @@ import {
   bytesToUtf8,
 } from "@waku/sdk";
 
+import { useAccount } from "wagmi";
+
 const ContentTopic = "/toy-chat/2/huilong/proto";
 const decoder = createDecoder(ContentTopic);
 
@@ -18,8 +20,25 @@ const ProtoChatMessage = new protobuf.Type("ChatMessage")
 function App() {
   const [waku, setWaku] = React.useState(undefined);
   const [wakuStatus, setWakuStatus] = React.useState("None");
-  const [messages, setMessages] = React.useState([]);
+  const { address } = useAccount();
+  const [messages, setMessages] = React.useState<any>([]);
+  // set Messages in the local storage
+        React.useEffect(() => {
+        if (messages.length > 0) {
+        localStorage.setItem("messages", JSON.stringify(messages));
+        }
+        }, [messages]);
+        
 
+        // load Messages from the local storage
+        React.useEffect(() => {
+        const messages = localStorage.getItem("messages");
+        if (messages) {
+        setMessages(JSON.parse(messages));
+        }
+        }
+        , []);
+  const [text, setText] = React.useState("");
   React.useEffect(() => {
     if (wakuStatus !== "None") return;
 
@@ -91,10 +110,28 @@ function App() {
           <Messages messages={messages} />
         </ul>
         <div className="flex flex-row gap-4">
-        <input type="text"
+        <input 
+        
+        onChange={(e) => {
+                setText(e.target.value);
+        }}
+        value={text}
+        type="text"
                 className="border-2 border-black rounded-md p-2 w-full"
         />
-        <button className="border-2 border-black rounded-md p-2">Send</button>
+        <button 
+        onClick={() => {
+                setMessages((currentMessages: any) => {
+                        return currentMessages.concat({
+                        text,
+                        timestamp: new Date(),
+                        nick: address && address?.length > 0 ? address?.slice(0, 6) : "Me",
+                        });
+                        });
+                setText("");
+        }}
+        
+        className="border-2 border-black rounded-md p-2">Send</button>
         </div>
 
     </div>
@@ -148,7 +185,7 @@ function formatDate(timestamp) {
 
 const Nav = () => {
         return (
-          <span className="flex w-[1048px] mt-[48px]">
+          <span className="flex w-full p-4">
             <span className="flex justify-between w-full items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

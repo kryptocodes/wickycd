@@ -19,12 +19,12 @@ const huddleClient = new HuddleClient({
 });
 
 
-export const BE_URL = "http://localhost:5000/";
+export const BE_URL = "https://reclaim-test.onrender.com/";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider>
-      <AirstackProvider apiKey="1869b4fa73dd54ed09970cad800742cea">
+      <AirstackProvider apiKey="GWBJbZ82VpiCyFusb89d40BaU05t8atG">
        <HuddleProvider client={huddleClient}>
        <AnonAadhaarProvider _appId={app_id}>
       <Component {...pageProps} />

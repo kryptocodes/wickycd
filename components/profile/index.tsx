@@ -78,7 +78,7 @@ function Profile({
 
   const [isClient, setIsClient] = React.useState(false);
 
-  console.log(userPaid);
+  console.log(userPaid, "userPaid");
   useEffect(() => {
     setIsClient(true);
     updateUserPaidStatus()
@@ -192,7 +192,7 @@ function Profile({
             ""
           )}
 
-          {isClient && isConnected && address && address !== wallet ? (
+          {isClient && (isConnected && address && address !== wallet) ? (
             <div className="flex flex-row">
               <button
                 className="blue-btn text-white h-12 px-4 flex flex-row gap-4 p-2"
@@ -216,7 +216,7 @@ function Profile({
                     ? setPaymentModal({
                         state: !paymentModal.state,
                         type: false,
-                        payment: paymentModal?.payment,
+                        payment: true,
                       })
                     : router.push("/")
                 }

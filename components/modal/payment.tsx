@@ -110,7 +110,7 @@ const PaymentModal: React.FC<paymentModalProps> = ({ state, setState, username, 
               width={50}
               height={50}
             />
-            {!payment && !type ? 
+            {!payment ? 
             <button className="text-white w-full black-btn mb-4 mt-2"
               onClick={() => sendTransaction?.() }
             >

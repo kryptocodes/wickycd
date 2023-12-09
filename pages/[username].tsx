@@ -20,6 +20,9 @@ import Profile from "@/components/profile";
 import { fetchSpotifyUsername } from "@/lib/spotifyUser";
 import { socialIcons } from "@/components/LinkBtn";
 import { FetchAllLensHandle } from "@/lib/fetchLensHandle";
+import { ethers } from "ethers";
+import * as PushAPI from '@pushprotocol/restapi';
+
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -53,7 +56,51 @@ export default function Home() {
   },
  });
  const [lensHandle, setLensHandle] = useState<any>([]);
+// const getPush = async() => {
+//   const signer = ethers.Wallet.createRandom();
 
+// // Initialize wallet user
+// // 'CONSTANTS.ENV.PROD' -> mainnet apps | 'CONSTANTS.ENV.STAGING' -> testnet apps
+// const userAlice = await PushAPI.initialize(signer, { env: CONSTANTS.ENV.STAGING });
+
+// // List inbox notifications
+// const inboxNotifications = await userAlice.notification.list("INBOX");
+
+// // List spam notifications
+// const spamNotifications = await userAlice.notification.list("SPAM");
+
+// // Push channel address
+// const pushChannelAdress = "0x3D3300F799517CC5c81Adb703fF1645B96C2b6e8";
+
+// // Subscribe to push channel
+// await userAlice.notification.subscribe(
+//   `eip155:11155111:${pushChannelAdress}`, // channel address in CAIP format
+// );
+
+// // Send notification, provided userAlice has a channel
+// const response = await userAlice.channel.send(["*"], {
+//   notification: {
+//     title: "You awesome notification",
+//     body: "from your amazing protocol",
+//   },
+// });
+
+// // To listen to real time notifications
+// const stream = await userAlice.initStream([CONSTANTS.STREAM.NOTIF]);
+
+// // Set stream event handling
+// stream.on(CONSTANTS.STREAM.NOTIF, (data) => {
+//   console.log(data);
+// });
+
+// // Connect to stream
+// stream.connect();
+
+
+// }
+// useEffect(() => {
+//   getPush()
+// }, [])
  useEffect(() => {
     if(router.isReady){
         fetchUserInfo({username: router.query.username as string})
