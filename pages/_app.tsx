@@ -6,6 +6,7 @@ import { AnonAadhaarProvider } from 'anon-aadhaar-react'
 const app_id = process.env.NEXT_PUBLIC_APP_ID || "";
 import { HuddleClient, HuddleProvider } from "@huddle01/react";
 import { AirstackProvider } from "@airstack/airstack-react";
+import { XMTPProvider } from "@xmtp/react-sdk";
 
 
 
@@ -24,6 +25,7 @@ export const BE_URL = "https://reclaim-test.onrender.com/";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider>
+      <XMTPProvider>
       <AirstackProvider apiKey="GWBJbZ82VpiCyFusb89d40BaU05t8atG">
        <HuddleProvider client={huddleClient}>
        <AnonAadhaarProvider _appId={app_id}>
@@ -31,6 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </AnonAadhaarProvider>
       </HuddleProvider>
       </AirstackProvider>
+      </XMTPProvider>
     </WagmiProvider>
   );
 }
