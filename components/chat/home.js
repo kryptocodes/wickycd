@@ -7,7 +7,7 @@ import { Client } from "@xmtp/xmtp-js";
 
 import React, { useEffect, useState, useRef } from "react";
 import Chat from "./chat";
-import Contacts from "./Contacts"
+import Contacts from "./contacts"
 
 const styles = `.Home {
     background-color: white;
