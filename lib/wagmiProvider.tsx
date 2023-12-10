@@ -17,10 +17,10 @@ import {
   } from "@rainbow-me/rainbowkit/wallets";
   
   import "@rainbow-me/rainbowkit/styles.css";
-  import { Chain, configureChains, createConfig, WagmiConfig } from "wagmi";
+  import { Chain, configureChains, createConfig, sepolia, WagmiConfig } from "wagmi";
   import { publicProvider } from "wagmi/providers/public";
   
-  import { arbitrum, mainnet, optimism, polygon, polygonZkEvmTestnet } from "wagmi/chains";
+  import { arbitrum, arbitrumGoerli, baseSepolia, goerli, mainnet, mantleTestnet, optimism, polygon, polygonZkEvmTestnet, scrollTestnet } from "wagmi/chains";
   
   import { rainbowMagicConnector } from "@/lib/rainbowMagicConnector";
   import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
@@ -28,7 +28,7 @@ import {
   import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
 
   const { chains, publicClient, webSocketPublicClient } = configureChains(
-    [polygonZkEvmTestnet],
+    [polygonZkEvmTestnet,goerli,sepolia,mantleTestnet,arbitrumGoerli,baseSepolia,scrollTestnet,scrollTestnet],
     [publicProvider()]
   );
   
