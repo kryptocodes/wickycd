@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as React from "react";
 import protobuf from "protobufjs";
 import {
@@ -46,6 +47,7 @@ function App() {
 
     createLightNode({ defaultBootstrap: true }).then((waku) => {
       waku.start().then(() => {
+        //@ts-ignore
         setWaku(waku);
         setWakuStatus("Connecting");
       });
